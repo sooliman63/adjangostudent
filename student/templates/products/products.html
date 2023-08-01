@@ -2,43 +2,79 @@
 {% load static %}
 {% block content %}
 <div class='container'>
-  <div class="row row-cols-1 row-cols-md-2 g-4">
-    <div class="col">
-      <div class="card">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
-        </div>
-      </div>
-    </div>
-    <div class="col">
-      <div class="card">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class='container'>
+  <nav aria-label="breadcrumb" class=navbar>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{%url 'home'%}">Home</a></li>
+      <li class="breadcrumb-item"><a href="{%url 'products'%}">Products</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Elctronecs</li>
+    </ol>
+  </nav>
 </div>
-{% endblock content %}
+  <div class="row row-cols-1 row-cols-md-1   g-4">
+    {% if products %}
+    {% for product in products %}
+     
+    <div class="col">
+    
+      <div class="card">
+        <img src="{{product.photo.url}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{product.name}}</h5>
+          <p class="card-text" >{{product.description}}</p>
+          <h5 class="card-title" >{{product.price}}RS</h5>
+        </div>
+      </div>
+    </div>
+      {% endfor %} 
+      {% else %}
+      <p>No Products Available</p>
+      {% endif %}
+  </div>
+  {% comment %} شريط التنقل السفلي start previous {% endcomment %}
+  <nav aria-label="...">
+    {%if products.has_other_pages %}
+    
+    <ul class="pagination">
+      {%if products.has_previous %}
+      
+      <li class="page-item ">
+        <a href="?page={{products.previous_page_number}}" class="page-link">Previous</a>
+      </li>
+      {%else%}
+      <li class="page-item disabled">
+        <a class="page-link">Previous</a>
+      </li>
+      {%endif%}
+      {% comment %} end previous {% endcomment %}
+      {% for i in products.paginator.page_range %}
+      {%if products.number == i%}
+      
+      <li class="page-item active">
+        <a class="page-link" >{{i}}</a>
+      </li>
+      {%else%}
+      
+      <li class="page-item ">
+        <a  href="?page={{i}}" class="page-link" >{{i}}</a>
+      </li>
+      {%endif%}
+      {%endfor%}
+      
+      {% comment %} شريط التنقل السفلي start next {% endcomment %}
+      {%if products.has_next %}
+      
+      <li class="page-item ">
+        <a href="?page={{products.next_page_number}}" class="page-link">next</a>
+      </li>
+      {%else%}
+      <li class="page-item disabled">
+        <a class="page-link">next</a>
+      </li>
+      {%endif%}
+      {% comment %} end next {% endcomment %}
+      {%endif%}{% comment %}  end{% if products.has_other_pages %}   {% endcomment %}
+    </ul>
+  </nav>
+  </div>
+{% endblock %}
